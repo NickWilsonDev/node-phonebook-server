@@ -5,6 +5,18 @@ const http = require('http');
 let contacts = [];
 let lastId = 0;
 
+// check if file exists helper function
+let function checkFileExistsSync(filepath){
+    let flag = true;
+    try{
+        fs.accessSync(filepath, fs.F_OK);
+    }catch(e){
+        flag = false;
+    }
+    return flag;
+}
+
+
 let findContact = (id) => {
     id = parseInt(id, 10); // always specify the base
     return contacts.find((contact) => {
