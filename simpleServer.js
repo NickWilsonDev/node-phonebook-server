@@ -89,6 +89,11 @@ let deleteContact = (request, response, id) => {
     }
 };
 
+let getPika = (request, response) => {
+    let str = '/\\︿╱\\\n' + '\\0_ 0 /╱\\╱ \n' + '\\▁︹_/\n';
+    response.end(str);
+};
+
 let notFound = (request, response) => {
     response.setStatus = 404;
     response.end('404 not found');
@@ -99,6 +104,7 @@ let routes = [
     { method: 'POST', path: '/contacts', handler: postContacts },
     { method: 'PUT', path: '/contacts', handler: updateContact }, 
     { method: 'DELETE', path: '/contacts', handler: deleteContact },
+    { method: 'GET', path: '/pika', handler: getPika },
 ]
 const server = http.createServer((request, response) => {
     console.log(request.method + ' ' + request.url);
