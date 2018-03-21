@@ -90,7 +90,9 @@ let deleteContact = (request, response, id) => {
 };
 
 let getPika = (request, response) => {
-    let str = '/\\︿╱\\\n' + '\\0_ 0 /╱\\╱ \n' + '\\▁︹_/\n';
+    let str = '/\\︿╱\\\n' + '\\0_ 0 /╱\\╱ \n' + '\\▁︹_/\n'
+               + 'IP address:: ' + request.connection.remoteAddress;;
+    console.log('IP address:: ' + request.connection.remoteAddress);
     response.end(str);
 };
 
