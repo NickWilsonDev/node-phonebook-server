@@ -62,11 +62,12 @@ let updateContact = function(request, response, id) {
             for (let i = 0; i < contacts.length; i++) {
                 if (contacts[i].id == id) {
                     contacts.splice(i, 1);
+                    contacts.push(newContact);
+                    response.end('Contact updated');
                     break;
                 }
             }
-            contacts.push(newContact);
-            response.end('Contact updated');
+            response.end('No contact ' + id + ' found');
         });
     } else {
         response.end('No id specified');
@@ -78,10 +79,11 @@ let deleteContact = function(request, response, id) {
         for (let i = 0; i < contacts.length; i++) {
             if (contacts[i].id == id) {
                 contacts.splice(i, 1);
+                response.end('Contact ' + id + ' deleted');
                 break;
             }
         } 
-        response.end('Contact ' + id + ' deleted');
+        response.end('No Contact ' + id + ' found');
     } else {
         response.end('No id specified');
     }
