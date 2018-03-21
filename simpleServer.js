@@ -5,23 +5,23 @@ const http = require('http');
 let contacts = [];
 let lastId = 0;
 
-let findContact = function(id) {
+let findContact = (id) => {
     id = parseInt(id, 10); // always specify the base
-    return contacts.find(function(contact) {
+    return contacts.find((contact) => {
         return contact.id === id;
     });
 };
 
-let matches = function(request, method, path) {
+let matches = (request, method, path) => {
     return request.method === method 
            && request.url.startsWith(path);
 };
 
-let getSuffix = function(fullUrl, prefix) {
+let getSuffix = (fullUrl, prefix) => {
     return fullUrl.slice(prefix.length);
 };
 
-let getContacts = function(request, response, id) {
+let getContacts = (request, response, id) => {
     if (id) {
         for (let i = 0; i < contacts.length; i++) {
             if (contacts[i].id == id) {
@@ -33,13 +33,13 @@ let getContacts = function(request, response, id) {
     }
 };
 
-let postContacts = function(request, response, id) {
+let postContacts = (request, response, id) => {
     // read in body from browser
     let body = '';
-    request.on('data', function(chunk) {
+    request.on('data', (chunk) => {
         body += chunk.toString();
     });
-    request.on('end', function() {
+    request.on('end', () => {
         let contact = JSON.parse(body);
         contact.id = ++lastId;
         console.log('Created: ' + contact);
@@ -48,14 +48,14 @@ let postContacts = function(request, response, id) {
     });
 };
 
-let updateContact = function(request, response, id) {
+let updateContact = (request, response, id) => {
     //update contact
     if (id) {
         let body = '';
-        request.on('data', function(chunk) {
+        request.on('data', (chunk) => {
             body += chunk.toString();
         });
-        request.on('end', function() {
+        request.on('end', () => {
             let newContact = JSON.parse(body);
             newContact.id = id;
             // delete old contact with the right id
@@ -74,7 +74,7 @@ let updateContact = function(request, response, id) {
     }
 }
 
-let deleteContact = function(request, response, id) {
+let deleteContact = (request, response, id) => {
     if (id) {
         for (let i = 0; i < contacts.length; i++) {
             if (contacts[i].id == id) {
@@ -89,7 +89,12 @@ let deleteContact = function(request, response, id) {
     }
 };
 
-let notFound = function(request, response) {
+let getPika = (request, response) => {
+    let str = '/\\︿╱\\\n' + '\\0_ 0 /╱\\╱ \n' + '\\▁︹_/\n';
+    response.end(str);
+};
+
+let notFound = (request, response) => {
     response.setStatus = 404;
     response.end('404 not found');
 }
@@ -99,11 +104,12 @@ let routes = [
     { method: 'POST', path: '/contacts', handler: postContacts },
     { method: 'PUT', path: '/contacts', handler: updateContact }, 
     { method: 'DELETE', path: '/contacts', handler: deleteContact },
+    { method: 'GET', path: '/pika', handler: getPika },
 ]
 const server = http.createServer((request, response) => {
     console.log(request.method + ' ' + request.url);
     let id = request.url.split('/').pop();
-    let route = routes.find(function(route) {
+    let route = routes.find((route) => {
         return matches(request, route.method, route.path);
     });
     route ? route.handler(request, response, id) : notFound(request, response);
