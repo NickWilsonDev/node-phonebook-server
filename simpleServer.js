@@ -6,7 +6,7 @@ let contacts = [];
 let lastId = 0;
 
 // check if file exists helper function
-let function checkFileExistsSync(filepath){
+let checkFileExistsSync = (filepath) => {
     let flag = true;
     try{
         fs.accessSync(filepath, fs.F_OK);
@@ -26,7 +26,7 @@ let findContact = (id) => {
 
 let matches = (request, method, path) => {
     return request.method === method 
-           && request.url.startsWith(path);
+           && path.exec(request.url);
 };
 
 let getSuffix = (fullUrl, prefix) => {
@@ -34,7 +34,8 @@ let getSuffix = (fullUrl, prefix) => {
 };
 
 let getContacts = (request, response, id) => {
-    if (id) {
+    console.log('in getContacts, id:: ' + id);
+    if (id && id != 'contacts') {
         for (let i = 0; i < contacts.length; i++) {
             if (contacts[i].id == id) {
                 response.end(JSON.stringify(contacts[i]));
@@ -114,11 +115,11 @@ let notFound = (request, response) => {
 }
 
 let routes = [
-    { method: 'GET', path: '/contacts', handler: getContacts },
-    { method: 'POST', path: '/contacts', handler: postContacts },
-    { method: 'PUT', path: '/contacts', handler: updateContact }, 
-    { method: 'DELETE', path: '/contacts', handler: deleteContact },
-    { method: 'GET', path: '/pika', handler: getPika },
+    { method: 'GET', path: /^\/contacts([\/][0-9]+)?[\/]?$/, handler: getContacts },
+    { method: 'POST', path: /^\/contacts[\/]?$/, handler: postContacts },
+    { method: 'PUT', path: /^\/contacts\/[0-9]+$/, handler: updateContact }, 
+    { method: 'DELETE', path: /^\/contacts\/[0-9]+$/, handler: deleteContact },
+    { method: 'GET', path: /^\/pika[\/]?$/, handler: getPika },
 ]
 const server = http.createServer((request, response) => {
     console.log(request.method + ' ' + request.url);
