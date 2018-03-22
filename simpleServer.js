@@ -109,10 +109,28 @@ let getPika = (request, response) => {
     response.end(str);
 };
 
+var renderContact = contact => {
+        return `<li>${contact.name}</li>`;
+};
+
+var renderHomePage = (request, response) => {
+    response.end(`
+        <html>
+            <body>
+                <p>Hello World!</p>
+                <ul>
+                    ${contacts.map(renderContact).join('')}
+                </ul>
+            </body>
+        </html>
+    `);
+};
+
 let notFound = (request, response) => {
     response.setStatus = 404;
     response.end('404 not found');
 }
+
 
 let routes = [
     { method: 'GET', path: /^\/contacts([\/][0-9]+)?[\/]?$/, handler: getContacts },
@@ -120,6 +138,7 @@ let routes = [
     { method: 'PUT', path: /^\/contacts\/[0-9]+$/, handler: updateContact }, 
     { method: 'DELETE', path: /^\/contacts\/[0-9]+$/, handler: deleteContact },
     { method: 'GET', path: /^\/pika[\/]?$/, handler: getPika },
+    { method: 'GET', path: /^\/$/, handler: renderHomePage },
 ]
 const server = http.createServer((request, response) => {
     console.log(request.method + ' ' + request.url);
